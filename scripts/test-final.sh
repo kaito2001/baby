@@ -105,7 +105,7 @@ cat $HOME/.baby/config/genesis.json | jq '.app_state["mint"]["params"]["mint_den
 toml set --toml-path $HOME/.baby/config/app.toml api.swagger true
 toml set --toml-path $HOME/.baby/config/app.toml api.enable true
 toml set --toml-path $HOME/.baby/config/app.toml api.address tcp://0.0.0.0:2203
-toml set --toml-path $HOME/.baby/config/client.toml node tcp://0.0.0.0:2203
+toml set --toml-path $HOME/.baby/config/client.toml node tcp://0.0.0.0:2202
 
 # create more test key
 MNEMONIC_1=$(babyd keys add test1 --keyring-backend $KEYRING --algo $KEYALGO --output json | jq -r '.mnemonic')
