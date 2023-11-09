@@ -5,7 +5,8 @@ CHAINID="${CHAINID:-baby-1}"
 # check if CHAINID is not defined
 if [ -z "$CHAINID" ];
 then
-    CHAINID="baby-1"
+    CHAINID="test-final-1"
+
 fi
 KEYRING="test"
 MONIKER="localtestnet"
@@ -50,7 +51,7 @@ fi
 if [ $WILL_CONTINUE -eq 1 ];
 then
     # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
-    babyd start --pruning=nothing --log_level $LOGLEVEL --minimum-gas-prices=0.0001ubaby --p2p.laddr tcp://0.0.0.0:2280 --grpc.address 0.0.0.0:2282 --grpc-web.address 0.0.0.0:2283
+    babyd start --pruning=nothing --log_level $LOGLEVEL --minimum-gas-prices=0.0001ubaby --p2p.laddr tcp://0.0.0.0:2204 --rpc.laddr tcp://0.0.0.0:2202 --grpc.address 0.0.0.0:2282 --grpc-web.address 0.0.0.0:2283
     exit 1;
 fi
 
@@ -93,17 +94,18 @@ babyd init $MONIKER --chain-id $CHAINID
 # Change parameter token denominations to ubaby
 cat $HOME/.baby/config/genesis.json | jq '.app_state["staking"]["params"]["bond_denom"]="ubaby"' > $HOME/.baby/config/tmp_genesis.json && mv $HOME/.baby/config/tmp_genesis.json $HOME/.baby/config/genesis.json
 cat $HOME/.baby/config/genesis.json | jq '.app_state["crisis"]["constant_fee"]["denom"]="ubaby"' > $HOME/.baby/config/tmp_genesis.json && mv $HOME/.baby/config/tmp_genesis.json $HOME/.baby/config/genesis.json
-cat $HOME/.baby/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="ubaby"' > $HOME/.baby/config/tmp_genesis.json && mv $HOME/.baby/config/tmp_genesis.json $HOME/.baby/config/genesis.json
-cat $HOME/.baby/config/genesis.json | jq '.app_state["mint"]["params"]["mint_denom"]="ubaby"' > $HOME/.baby/config/tmp_genesis.json && mv $HOME/.baby/config/tmp_genesis.json $HOME/.baby/config/genesis.json
+cat $HOME/.baby/config/genesis.json | jq '.app_state["gov"]["deposit_params"]["min_deposit"][0]["denom"]="ufinal"' > $HOME/.baby/config/tmp_genesis.json && mv $HOME/.baby/config/tmp_genesis.json $HOME/.baby/config/genesis.json
+cat $HOME/.baby/config/genesis.json | jq '.app_state["mint"]["params"]["mint_denom"]="ufinal"' > $HOME/.baby/config/tmp_genesis.json && mv $HOME/.baby/config/tmp_genesis.json $HOME/.baby/config/genesis.json
 
 # Set gas limit in genesis
+
 # cat $HOME/.baby/config/genesis.json | jq '.consensus_params["block"]["max_gas"]="10000000"' > $HOME/.baby/config/tmp_genesis.json && mv $HOME/.baby/config/tmp_genesis.json $HOME/.baby/config/genesis.json
 
 # enable rest server and swagger
 toml set --toml-path $HOME/.baby/config/app.toml api.swagger true
 toml set --toml-path $HOME/.baby/config/app.toml api.enable true
-toml set --toml-path $HOME/.baby/config/app.toml api.address tcp://0.0.0.0:1310
-toml set --toml-path $HOME/.baby/config/client.toml node tcp://0.0.0.0:2281
+toml set --toml-path $HOME/.baby/config/app.toml api.address tcp://0.0.0.0:2203
+toml set --toml-path $HOME/.baby/config/client.toml node tcp://0.0.0.0:2022
 
 # create more test key
 MNEMONIC_1=$(babyd keys add test1 --keyring-backend $KEYRING --algo $KEYALGO --output json | jq -r '.mnemonic')
@@ -131,4 +133,4 @@ then
 fi
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
-babyd start --pruning=nothing --log_level $LOGLEVEL --minimum-gas-prices=0.0001ubaby --p2p.laddr tcp://0.0.0.0:2280 --rpc.laddr tcp://0.0.0.0:2281 --grpc.address 0.0.0.0:2282 --grpc-web.address 0.0.0.0:2283
+babyd start --pruning=nothing --log_level $LOGLEVEL --minimum-gas-prices=0.0001ubaby --p2p.laddr tcp://0.0.0.0:2204 --rpc.laddr tcp://0.0.0.0:2202 --grpc.address 0.0.0.0:2282 --grpc-web.address 0.0.0.0:2283
